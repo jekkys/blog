@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  
+  <meta name="generator" content="Hexo 5.4.1">
+
+  
+
+  
+
+  
+    <meta name="author" content="茄">
+  
+
+  
+
+  
+
+  <title>阿里云服务器 ECS-建站教程-部署LNMP-搭建LNMP环境（CentOS 7.3） | Hexo</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          Hexo
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">首页</a></li>
+        
+          <li class="navbar-list-item"><a href="/links">友链</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">关于</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">阿里云服务器 ECS-建站教程-部署LNMP-搭建LNMP环境（CentOS 7.3）</h1>
+          <h2 class="title-sub-wrap">
+            <strong>茄</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-02-11T03:42:40.000Z" itemprop="datePublished">2022-02-11</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/Linux/">🏷️ Linux</a></li>
+  
+    <li><a href="/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">🏷️ 软件安装</a></li>
+  
+    <li><a href="/tags/Nginx/">🏷️ Nginx</a></li>
+  
+    <li><a href="/tags/MySQL/">🏷️ MySQL</a></li>
+  
+    <li><a href="/tags/PHP/">🏷️ PHP</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <p>本文介绍如何使用一台普通配置的云服务器 <code>ECS</code> 实例搭建 <code>LNMP</code> 平台的web环境，这也是本人的踩坑总结。</p>
+<p><strong>适用对象</strong></p>
+<p>适用于熟悉Linux操作系统，刚开始使用阿里云进行建站的个人用户。</p>
+<p><strong>基本流程</strong></p>
+<p>使用云服务器 <code>ECS</code> 搭建 <code>LNMP</code> 平台的操作步骤如下：</p>
+<p>1.准备编译环境</p>
+<p>2.安装 nginx</p>
+<p>3.安装 mysql</p>
+<p>4.安装 php-fpm</p>
+<p>5.测试访问</p>
+<h2 id="步骤一：准备编译环境"><a href="#步骤一：准备编译环境" class="headerlink" title="步骤一：准备编译环境"></a>步骤一：准备编译环境</h2><p>本文主要说明手动安装 <code>LNMP</code> 平台的操作步骤，您也可以在云市场购买 <code>LNMP</code> 镜像直接启动 <code>ECS</code>，以便快速建站。</p>
+<p>打开一个终端，登录 <code>ECS</code> 云服务器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@IP</span><br></pre></td></tr></table></figure>
+
+<p>回车，输入正确的密码后再回车即可登录。</p>
+<p>####1、系统版本说明</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cat /etc/redhat-release</span><br><span class="line">CentOS Linux release 7.3.1611 (Core)</span><br><span class="line">[root@example ~]#</span><br></pre></td></tr></table></figure>
+
+<p>注：这是本文档实施时参考的系统版本。您的实际使用版本可能与此不同，下文中的 <code>nginx</code>，<code>mysql</code>，及 <code>php</code> 版本，您也可以根据实际情况选择相应版本。</p>
+<p>####2、关闭SELINUX</p>
+<p>修改配置文件，重启服务后永久生效。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# sed -i &#x27;s/SELINUX=.*/SELINUX=disabled/g&#x27;  /etc/selinux/config</span><br></pre></td></tr></table></figure>
+<p>命令行设置立即生效。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# setenforce 0</span><br></pre></td></tr></table></figure>
+<p>####3、安全组设置</p>
+<p>在 <code>ECS</code> 安全组放行需访问的端口和访问白名单，下面的示例表示允许所有 <code>IP</code> 访问服务器的 80 端口。您可以根据实际情况放行允许访问的客户端 <code>IP</code>。</p>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/2157552327.png" alt="安全组"></p>
+<h2 id="步骤二：安装-Nginx"><a href="#步骤二：安装-Nginx" class="headerlink" title="步骤二：安装 Nginx"></a>步骤二：安装 Nginx</h2><p><code>Nginx</code> 是一个小巧而高效的 <code>Linux</code> 下的 <code>Web</code> 服务器软件，是由 <code>Igor Sysoev</code> 为俄罗斯访问量第二的 <code>Rambler.ru</code> 站点开发的，已经在一些俄罗斯的大型网站上运行多年，目前很多国内外的门户网站、行业网站也都在是使用 <code>Nginx</code>，相当稳定。</p>
+<p>####Nginx下载页面地址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
+</blockquote>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/nginx.png" alt="nignx下载页面"></p>
+<p>#####1、添加运行nginx服务进程的用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# groupadd -r nginx</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# useradd -r -g nginx  nginx</span><br></pre></td></tr></table></figure>
+
+<p>#####2、下载源码包解压编译。</p>
+<p>将鼠标放到你想下载的对应版本的文件上方，【右键】-&gt;【复制链接地址】, 然后：</p>
+<p>进入要存放源码文件的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/src</span><br></pre></td></tr></table></figure>
+
+<p>下载对应版本的压缩包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# wget http://nginx.org/download/nginx-1.10.2.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>解压缩：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# tar xvf nginx-1.10.2.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>安装依赖包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum groupinstall &quot;Development tools&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum -y install gcc wget gcc-c++ automake autoconf libtool libxml2-devel libxslt-devel perl-devel perl-ExtUtils-Embed pcre-devel openssl-devel</span><br></pre></td></tr></table></figure>
+
+<p>进入解压后的源码目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/src/nginx-1.10.2</span><br></pre></td></tr></table></figure>
+
+<p>配置编译参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--sbin-path=/usr/sbin/nginx \</span><br><span class="line">--conf-path=/etc/nginx/nginx.conf \</span><br><span class="line">--error-log-path=/var/log/nginx/error.log \</span><br><span class="line">--http-log-path=/var/log/nginx/access.log \</span><br><span class="line">--pid-path=/var/run/nginx.pid \</span><br><span class="line">--lock-path=/var/run/nginx.lock \</span><br><span class="line">--http-client-body-temp-path=/var/tmp/nginx/client \</span><br><span class="line">--http-proxy-temp-path=/var/tmp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/var/tmp/nginx/fcgi \</span><br><span class="line">--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/var/tmp/nginx/scgi \</span><br><span class="line">--user=nginx \</span><br><span class="line">--group=nginx \</span><br><span class="line">--with-pcre \</span><br><span class="line">--with-http_v2_module \</span><br><span class="line">--with-http_ssl_module \</span><br><span class="line">--with-http_realip_module \</span><br><span class="line">--with-http_addition_module \</span><br><span class="line">--with-http_sub_module \</span><br><span class="line">--with-http_dav_module \</span><br><span class="line">--with-http_flv_module \</span><br><span class="line">--with-http_mp4_module \</span><br><span class="line">--with-http_gunzip_module \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--with-http_random_index_module \</span><br><span class="line">--with-http_secure_link_module \</span><br><span class="line">--with-http_stub_status_module \</span><br><span class="line">--with-http_auth_request_module \</span><br><span class="line">--with-mail \</span><br><span class="line">--with-mail_ssl_module \</span><br><span class="line">--with-file-aio \</span><br><span class="line">--with-ipv6 \</span><br><span class="line">--with-threads \</span><br><span class="line">--with-stream \</span><br><span class="line">--with-stream_ssl_module</span><br></pre></td></tr></table></figure>
+
+<p>如果没有配置出错，然后进行编译安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p>创建 nginx 相关的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# mkdir -pv /var/tmp/nginx/client</span><br></pre></td></tr></table></figure>
+
+
+<p>#####3、添加SysV启动脚本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# vim /etc/init.d/nginx</span><br></pre></td></tr></table></figure>
+
+<p>复制以下内容到脚本中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># nginx - this script starts and stops the nginx daemon</span></span></span><br><span class="line"><span class="meta">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># chkconfig:   - 85 15</span></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">description: Nginx is an HTTP(S) server, HTTP(S) reverse \</span></span><br><span class="line"><span class="language-bash"><span class="comment">#               proxy and IMAP/POP3 proxy server</span></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">processname: nginx</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">config:      /etc/nginx/nginx.conf</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">config:      /etc/sysconfig/nginx</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">pidfile:     /var/run/nginx.pid</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Source <span class="keyword">function</span> library.</span></span><br><span class="line">. /etc/rc.d/init.d/functions</span><br><span class="line"><span class="meta"># </span><span class="language-bash">Source networking configuration.</span></span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"><span class="meta"># </span><span class="language-bash">Check that networking is up.</span></span><br><span class="line">[ &quot;$NETWORKING&quot; = &quot;no&quot; ] &amp;&amp; exit 0</span><br><span class="line">nginx=&quot;/usr/sbin/nginx&quot;</span><br><span class="line">prog=$(basename $nginx)</span><br><span class="line">NGINX_CONF_FILE=&quot;/etc/nginx/nginx.conf&quot;</span><br><span class="line">[ -f /etc/sysconfig/nginx ] &amp;&amp; . /etc/sysconfig/nginx</span><br><span class="line">lockfile=/var/lock/subsys/nginx</span><br><span class="line">start() &#123;</span><br><span class="line">    [ -x $nginx ] || exit 5</span><br><span class="line">    [ -f $NGINX_CONF_FILE ] || exit 6</span><br><span class="line">    echo -n $&quot;Starting $prog: &quot;</span><br><span class="line">    daemon $nginx -c $NGINX_CONF_FILE</span><br><span class="line">    retval=$?</span><br><span class="line">    echo</span><br><span class="line">    [ $retval -eq 0 ] &amp;&amp; touch $lockfile</span><br><span class="line">    return $retval</span><br><span class="line">&#125;</span><br><span class="line">stop() &#123;</span><br><span class="line">    echo -n $&quot;Stopping $prog: &quot;</span><br><span class="line">    killproc $prog -QUIT</span><br><span class="line">    retval=$?</span><br><span class="line">    echo</span><br><span class="line">    [ $retval -eq 0 ] &amp;&amp; rm -f $lockfile</span><br><span class="line">    return $retval</span><br><span class="line">killall -9 nginx</span><br><span class="line">&#125;</span><br><span class="line">restart() &#123;</span><br><span class="line">    configtest || return $?</span><br><span class="line">    stop</span><br><span class="line">    sleep 1</span><br><span class="line">    start</span><br><span class="line">&#125;</span><br><span class="line">reload() &#123;</span><br><span class="line">    configtest || return $?</span><br><span class="line">    echo -n $&quot;Reloading $prog: &quot;</span><br><span class="line">    killproc $nginx -HUP</span><br><span class="line">RETVAL=$?</span><br><span class="line">    echo</span><br><span class="line">&#125;</span><br><span class="line">force_reload() &#123;</span><br><span class="line">    restart</span><br><span class="line">&#125;</span><br><span class="line">configtest() &#123;</span><br><span class="line"><span class="meta">$</span><span class="language-bash">nginx -t -c <span class="variable">$NGINX_CONF_FILE</span></span></span><br><span class="line">&#125;</span><br><span class="line">rh_status() &#123;</span><br><span class="line">    status $prog</span><br><span class="line">&#125;</span><br><span class="line">rh_status_q() &#123;</span><br><span class="line">    rh_status &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">&#125;</span><br><span class="line">case &quot;$1&quot; in</span><br><span class="line">    start)</span><br><span class="line">        rh_status_q &amp;&amp; exit 0</span><br><span class="line">    $1</span><br><span class="line">        ;;</span><br><span class="line">    stop)</span><br><span class="line">        rh_status_q || exit 0</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    restart|configtest)</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    reload)</span><br><span class="line">        rh_status_q || exit 7</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    force-reload)</span><br><span class="line">        force_reload</span><br><span class="line">        ;;</span><br><span class="line">    status)</span><br><span class="line">        rh_status</span><br><span class="line">        ;;</span><br><span class="line">    condrestart|try-restart)</span><br><span class="line">        rh_status_q || exit 0</span><br><span class="line">            ;;</span><br><span class="line">    *)</span><br><span class="line">      echo $&quot;Usage: $0 &#123;start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest&#125;&quot;</span><br><span class="line">        exit 2</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+
+<p>#####4、赋予脚本执行权限。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chmod +x /etc/init.d/nginx</span><br></pre></td></tr></table></figure>
+
+<p>#####5、添加至服务管理列表，设置开机自启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig --add nginx</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig  nginx on</span><br></pre></td></tr></table></figure>
+
+<p>#####6、启动服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# service nginx start</span><br></pre></td></tr></table></figure>
+<p>#####7、浏览器访问可看到默认欢迎页面。</p>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/nginx-1.png" alt="nignx默认的欢迎页面"></p>
+<h2 id="步骤三：安装-MySQL"><a href="#步骤三：安装-MySQL" class="headerlink" title="步骤三：安装 MySQL"></a>步骤三：安装 MySQL</h2><p>####MySQL下载页面地址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></p>
+</blockquote>
+<p>#####1、准备编译环境。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum groupinstall &quot;Server Platform Development&quot;  &quot;Development tools&quot; -y</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum install cmake -y</span><br></pre></td></tr></table></figure>
+
+<p>#####2、准备 MySQL 数据存放目录。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# mkdir /mnt/data</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# groupadd -r mysql</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# useradd -r -g mysql -s /sbin/nologin mysql</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# id mysql</span><br><span class="line">uid=497(mysql) gid=498(mysql) groups=498(mysql)</span><br></pre></td></tr></table></figure>
+
+
+<p>#####3、更改数据目录属主属组。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chown -R mysql:mysql /mnt/data</span><br></pre></td></tr></table></figure>
+<p>#####4、解压编译在 <code>MySQL</code> 官网下载的稳定版源码包</p>
+<p>进入<code>MySQL</code> 的下载页面：</p>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/mysql-download-page.png" alt="MySQL官网下载页面"></p>
+<p>点击你想要的版本, 因为是编译安装，所以选择 <code>Source Code</code> 版本：<br><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/mysql.png" alt="选择版本"></p>
+<p>然后将本页面拉到下面，选择下载最下方的一个版本，点击<code>Download</code>：<br><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/mysql-download.png" alt="点击下载"></p>
+<p>跳转页面之后，对红框中的链接进行：【右键】-&gt;【复制链接地址】<br><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/copy-link.png" alt="复制链接"></p>
+<p>打开终端，切换目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/src</span><br></pre></td></tr></table></figure>
+
+<p>下载压缩包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# wget https://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.40.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>解压缩：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# tar xvf mysql-5.6.40.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>进入解压缩后的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/src/mysql-5.6.40</span><br></pre></td></tr></table></figure>
+
+<p>配置编译参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cmake \</span><br><span class="line">-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \</span><br><span class="line">-DMYSQL_DATADIR=/mnt/data \</span><br><span class="line">-DSYSCONFDIR=/etc \</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_ARCHIVE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_READLINE=1 \</span><br><span class="line">-DWITH_SSL=system \</span><br><span class="line">-DWITH_ZLIB=system \</span><br><span class="line">-DWITH_LIBWRAP=0 \</span><br><span class="line">-DMYSQL_TCP_PORT=3306 \</span><br><span class="line">-DMYSQL_UNIX_ADDR=/tmp/mysql.sock \</span><br><span class="line">-DDEFAULT_CHARSET=utf8 \</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci</span><br></pre></td></tr></table></figure>
+
+
+<p>若出现如下错误:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">CMake Error at cmake/ssl.cmake:247 (MESSAGE):</span><br><span class="line">  Cannot find appropriate system libraries for SSL.  Make sure you&#x27;ve</span><br><span class="line">  specified a supported SSL version.  Consult the documentation for WITH_SSL</span><br><span class="line">  alternatives</span><br><span class="line">Call Stack (most recent call first):</span><br><span class="line">  CMakeLists.txt:446 (MYSQL_CHECK_SSL)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-- Could NOT find Curses (missing:  CURSES_LIBRARY CURSES_INCLUDE_PATH)</span><br><span class="line">CMake Error at cmake/readline.cmake:85 (MESSAGE):</span><br><span class="line">  Curses library not found.  Please install appropriate package,</span><br><span class="line"></span><br><span class="line">      remove CMakeCache.txt and rerun cmake.On Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.</span><br><span class="line">Call Stack (most recent call first):</span><br><span class="line">  cmake/readline.cmake:128 (FIND_CURSES)</span><br><span class="line">  cmake/readline.cmake:218 (MYSQL_USE_BUNDLED_EDITLINE)</span><br><span class="line">  CMakeLists.txt:448 (MYSQL_CHECK_EDITLINE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-- Configuring incomplete, errors occurred!</span><br><span class="line">See also &quot;/usr/local/src/mysql-5.6.38/CMakeFiles/CMakeOutput.log&quot;.</span><br><span class="line">See also &quot;/usr/local/src/mysql-5.6.38/CMakeFiles/CMakeError.log&quot;.</span><br></pre></td></tr></table></figure>
+
+<p>执行此操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# rm CMakeCache.txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum install ncurses-devel</span><br></pre></td></tr></table></figure>
+
+<p>接着：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>#####5、修改安装目录的属组为mysql。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chown -R mysql:mysql /usr/local/mysql/</span><br></pre></td></tr></table></figure>
+<p>#####6、初始化数据库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# /usr/local/mysql/scripts/mysql_install_db --user=mysql --datadir=/mnt/data/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：在当前版本的操作系统的最小安装完成后，在 /etc 目录下会存在一个 my.cnf，需要将此文件更名为其他的名字，如：/etc/my.cnf.bak，否则，该文件会干扰源码安装的 MySQL 的正确配置，造成无法启动。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]#  mv /etc/my.cnf /etc/my.cnf.bak</span><br></pre></td></tr></table></figure>
+
+<p>#####7、拷贝配置文件和启动脚本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chmod +x /etc/init.d/mysqld</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cp support-files/my-default.cnf /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<p>#####8、设置开机自动启动。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig mysqld  on</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig --add mysqld</span><br></pre></td></tr></table></figure>
+
+<p>#####9、修改配置文件中的安装路径及数据目录存放路径。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# echo -e &quot;basedir = /usr/local/mysql\ndatadir = /mnt/data\n&quot; &gt;&gt; /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<p>#####10、设置PATH环境变量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt; /etc/profile.d/mysql.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# source /etc/profile.d/mysql.sh</span><br></pre></td></tr></table></figure>
+
+<p>#####11、启动服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# service mysqld start</span><br></pre></td></tr></table></figure>
+<p>若出现如下错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Starting MySQL.Logging to &#x27;/mnt/data/localhost.localdomain.err&#x27;.</span><br><span class="line">The server quit without updating PID file (/mnt/data/localh[FAILED]ldomain.pid).</span><br><span class="line">[root@localhost mysql]# service mysqld start</span><br><span class="line">Starting MySQL.The server quit without updating PID file (/mnt/data/localhost.localdomain.pid).                                            [FAILED]</span><br></pre></td></tr></table></figure>
+
+<p>重新初始化：<br>进入当前目录下的 scripts 目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# cd scripts/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost scripts]# ./mysql_install_db --user=mysql --datadir=/mnt/data/</span><br><span class="line">FATAL ERROR: Could not find ./bin/my_print_defaults</span><br><span class="line"></span><br><span class="line">If you compiled from source, you need to run &#x27;make install&#x27; to</span><br><span class="line">copy the software into the correct location ready for operation.</span><br><span class="line"></span><br><span class="line">If you are using a binary release, you must either be at the top</span><br><span class="line">level of the extracted archive, or pass the --basedir option</span><br><span class="line">pointing to that location.</span><br></pre></td></tr></table></figure>
+
+<p>接着执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost scripts]# /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/mnt/data &amp;</span><br></pre></td></tr></table></figure>
+
+<p>看到如下信息之后回车：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">[1] 16068</span><br><span class="line">[root@localhost scripts]# Installing MySQL system tables...2017-12-01 01:23:46 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).</span><br><span class="line">2017-12-01 01:23:46 0 [Note] Ignoring --secure-file-priv value as server is running with --bootstrap.</span><br><span class="line">2017-12-01 01:23:46 0 [Note] /usr/local/mysql/bin/mysqld (mysqld 5.6.38) starting as process 16077 ...</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Using atomics to ref count buffer pool pages</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: The InnoDB memory heap is disabled</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Memory barrier is not used</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Compressed tables use zlib 1.2.7</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Using CPU crc32 instructions</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Initializing buffer pool, size = 128.0M</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Completed initialization of buffer pool</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: The first specified data file ./ibdata1 did not exist: a new database to be created!</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Setting file ./ibdata1 size to 12 MB</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Database physically writes the file full: wait...</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Setting log file ./ib_logfile101 size to 48 MB</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Setting log file ./ib_logfile1 size to 48 MB</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Renaming log file ./ib_logfile101 to ./ib_logfile0</span><br><span class="line">2017-12-01 01:23:46 16077 [Warning] InnoDB: New log files created, LSN=45781</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Doublewrite buffer not found: creating new</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Doublewrite buffer created</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: 128 rollback segment(s) are active.</span><br><span class="line">2017-12-01 01:23:46 16077 [Warning] InnoDB: Creating foreign key constraint system tables.</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Foreign key constraint system tables created</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Creating tablespace and datafile system tables.</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Tablespace and datafile system tables created.</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: Waiting for purge to start</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] InnoDB: 5.6.38 started; log sequence number 0</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] RSA private key file not found: /mnt/data//private_key.pem. Some authentication plugins will not work.</span><br><span class="line">2017-12-01 01:23:46 16077 [Note] RSA public key file not found: /mnt/data//public_key.pem. Some authentication plugins will not work.</span><br><span class="line">2017-12-01 01:23:47 16077 [Note] Binlog end</span><br><span class="line">2017-12-01 01:23:47 16077 [Note] InnoDB: FTS optimize thread exiting.</span><br><span class="line">2017-12-01 01:23:47 16077 [Note] InnoDB: Starting shutdown...</span><br><span class="line">2017-12-01 01:23:48 16077 [Note] InnoDB: Shutdown completed; log sequence number 1625977</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">Filling help tables...2017-12-01 01:23:48 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).</span><br><span class="line">2017-12-01 01:23:48 0 [Note] Ignoring --secure-file-priv value as server is running with --bootstrap.</span><br><span class="line">2017-12-01 01:23:48 0 [Note] /usr/local/mysql/bin/mysqld (mysqld 5.6.38) starting as process 16099 ...</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Using atomics to ref count buffer pool pages</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: The InnoDB memory heap is disabled</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Memory barrier is not used</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Compressed tables use zlib 1.2.7</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Using CPU crc32 instructions</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Initializing buffer pool, size = 128.0M</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Completed initialization of buffer pool</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Highest supported file format is Barracuda.</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: 128 rollback segment(s) are active.</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Waiting for purge to start</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: 5.6.38 started; log sequence number 1625977</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] RSA private key file not found: /mnt/data//private_key.pem. Some authentication plugins will not work.</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] RSA public key file not found: /mnt/data//public_key.pem. Some authentication plugins will not work.</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] Binlog end</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: FTS optimize thread exiting.</span><br><span class="line">2017-12-01 01:23:48 16099 [Note] InnoDB: Starting shutdown...</span><br><span class="line">2017-12-01 01:23:49 16099 [Note] InnoDB: Shutdown completed; log sequence number 1625987</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">To start mysqld at boot time you have to copy</span><br><span class="line">support-files/mysql.server to the right place for your system</span><br><span class="line"></span><br><span class="line">PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !</span><br><span class="line">To do so, start the server, then issue the following commands:</span><br><span class="line"></span><br><span class="line">  /usr/local/mysql/bin/mysqladmin -u root password &#x27;new-password&#x27;</span><br><span class="line">  /usr/local/mysql/bin/mysqladmin -u root -h localhost.localdomain password &#x27;new-password&#x27;</span><br><span class="line"></span><br><span class="line">Alternatively you can run:</span><br><span class="line"></span><br><span class="line">  /usr/local/mysql/bin/mysql_secure_installation</span><br><span class="line"></span><br><span class="line">which will also give you the option of removing the test</span><br><span class="line">databases and anonymous user created by default.  This is</span><br><span class="line">strongly recommended for production servers.</span><br><span class="line"></span><br><span class="line">See the manual for more instructions.</span><br><span class="line"></span><br><span class="line">You can start the MySQL daemon with:</span><br><span class="line"></span><br><span class="line">  cd . ; /usr/local/mysql/bin/mysqld_safe &amp;</span><br><span class="line"></span><br><span class="line">You can test the MySQL daemon with mysql-test-run.pl</span><br><span class="line"></span><br><span class="line">  cd mysql-test ; perl mysql-test-run.pl</span><br><span class="line"></span><br><span class="line">Please report any problems at http://bugs.mysql.com/</span><br><span class="line"></span><br><span class="line">The latest information about MySQL is available on the web at</span><br><span class="line"></span><br><span class="line">  http://www.mysql.com</span><br><span class="line"></span><br><span class="line">Support MySQL by buying support/licenses at http://shop.mysql.com</span><br><span class="line"></span><br><span class="line">New default config file was created as /usr/local/mysql/my.cnf and</span><br><span class="line">will be used by default by the server when you start it.</span><br><span class="line">You may edit this file to change server settings</span><br><span class="line"></span><br><span class="line">WARNING: Default config file /etc/my.cnf exists on the system</span><br><span class="line">This file will be read by default by the MySQL server</span><br><span class="line">If you do not want to use this, either remove it, or use the</span><br><span class="line">--defaults-file argument to mysqld_safe when starting the server</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[1]+  完成                  /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/mnt/data</span><br></pre></td></tr></table></figure>
+
+<p>查看一下 <code>MySQL</code> 的状态：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost scripts]# service mysqld status</span><br><span class="line">MySQL is not running, but lock file (/var/lock/subsys/mysql[FAILED]</span><br></pre></td></tr></table></figure>
+
+<p>启动与重启的检查：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost scripts]# service mysqld start</span><br><span class="line">Starting MySQL.Logging to &#x27;/mnt/data/localhost.localdomain.err&#x27;.</span><br><span class="line">                                                           [  OK  ]</span><br><span class="line">[root@localhost scripts]# service mysqld restart</span><br><span class="line">Shutting down MySQL.                                       [  OK  ]</span><br><span class="line">Starting MySQL.                                            [  OK  ]</span><br></pre></td></tr></table></figure>
+
+<p>登录连接数据库:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# mysql -h 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤四：安装php-fpm"><a href="#步骤四：安装php-fpm" class="headerlink" title="步骤四：安装php-fpm"></a>步骤四：安装php-fpm</h2><p><code>Nginx</code> 本身不能处理 <code>PHP</code>，作为 <code>Web</code> 服务器，当它接收到请求后，不支持对外部程序的直接调用或者解析，必须通过 <code>FastCGI</code> 进行调用。如果是 <code>PHP</code> 请求，则交给 <code>PHP</code> 解释器处理，并把结果返回给客户端。<code>PHP-FPM</code> 是支持解析 <code>PHP</code>的一个 <code>FastCGI</code>进程管理器。提供了更好管理 <code>PHP</code>进程的方式，可以有效控制内存和进程、可以平滑重载 <code>PHP</code> 配置。</p>
+<p>#####1、安装依赖包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# yum install libmcrypt libmcrypt-devel mhash mhash-devel libxml2 libxml2-devel bzip2 bzip2-devel</span><br></pre></td></tr></table></figure>
+
+<p>#####2、从官网下载的源码包，解压缩并编译安装。<br>PHP ( 7.0.26 ) 下载页面：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://php.net/get/php-7.0.26.tar.gz/from/a/mirror">http://php.net/get/php-7.0.26.tar.gz/from/a/mirror</a></p>
+</blockquote>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/php.png" alt="download"></p>
+<p>选择一个镜像源，【右键】-&gt;【复制链接地址】:</p>
+<p>切换到存放源码的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/src/</span><br></pre></td></tr></table></figure>
+
+<p>下载压缩包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# wget http://cn2.php.net/get/php-7.0.26.tar.gz/from/this/mirror</span><br></pre></td></tr></table></figure>
+
+<p>下载好以后，这个压缩包的文件名是 <code>mirror</code>, 但是它其实是一个 <code>.tar.gz</code> 的压缩包，所以将它解压缩：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf php-7.0.26.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>进入解压缩后的目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd php-7.0.26/</span><br></pre></td></tr></table></figure>
+
+<p>配置编译参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# ./configure --prefix=/usr/local/php \</span><br><span class="line">--with-config-file-scan-dir=/etc/php.d \</span><br><span class="line">--with-config-file-path=/etc \</span><br><span class="line">--with-mysqli=/usr/local/mysql \</span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config \</span><br><span class="line">--with-pdo-mysql=/usr/local/mysql \</span><br><span class="line">--enable-mbstring \</span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--with-jpeg-dir \</span><br><span class="line">--with-png-dir \</span><br><span class="line">--with-zlib \</span><br><span class="line">--with-libxml-dir=/usr \</span><br><span class="line">--with-openssl \</span><br><span class="line">--enable-xml \</span><br><span class="line">--enable-sockets \</span><br><span class="line">--enable-fpm \</span><br><span class="line">--with-mcrypt \</span><br><span class="line">--with-bz2 \</span><br><span class="line">--with-curl=/usr/local/curl</span><br></pre></td></tr></table></figure>
+
+<p>如果没有 <code>curl</code>，请看这：<a target="_blank" rel="noopener" href="http://localhost:4000/2022/02/11/fb40fa0b28ad/">Linux 编译安装 CURL</a></p>
+<p>如果出现其他错误，看这里：<a target="_blank" rel="noopener" href="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/index.php/archives/111/">PHP编译过程中常见错误信息的解决方法</a></p>
+<p>如果没有配置出错，执行编译安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你使用的是配置比较低，内存比较小的服务器，可能到编译这一步就会卡掉，因为在前面已经启动了 MySQL ，MySQL的内存占用很高，我的服务器内存是 1 个 G ，MySQL的内存占用是 45.6% ，如果出现编译停止，报 fileinfo 扩展的错误，请先停止MySQL服务，等 PHP 安装完后再将其启动。</p>
+</blockquote>
+<p>#####3、添加php和php-fpm配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cp /usr/local/src/php-7.0.26/php.ini-production /etc/php.ini</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cd /usr/local/php/etc/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cp php-fpm.conf.default php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# sed -i &#x27;s@;pid = run/php-fpm.pid@pid = /usr/local/php/var/run/php-fpm.pid@&#x27; php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<p>#####4、添加php-fpm启动脚本，并赋予脚本执行权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# cp /usr/local/src/php-7.0.26/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chmod +x /etc/init.d/php-fpm</span><br></pre></td></tr></table></figure>
+
+<p>#####5、添加php-fpm至服务列表并设置开机自启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig --add php-fpm</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig --list php-fpm</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# chkconfig php-fpm on</span><br></pre></td></tr></table></figure>
+
+<p>#####6、启动服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@example ~]# service php-fpm start</span><br></pre></td></tr></table></figure>
+
+<p>若出现如下情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Starting php-fpm [01-Dec-2017 02:31:24] WARNING: Nothing matches the include pattern &#x27;/usr/local/php/etc/php-fpm.d/*.conf&#x27; from /usr/local/php/etc/php-fpm.conf at line 125.</span><br><span class="line">[01-Dec-2017 02:31:24] ERROR: No pool defined. at least one pool section must be specified in config file</span><br><span class="line">[01-Dec-2017 02:31:24] ERROR: failed to post process the configuration</span><br><span class="line">[01-Dec-2017 02:31:24] ERROR: FPM initialization failed</span><br><span class="line"> failed</span><br></pre></td></tr></table></figure>
+
+<p>执行此操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost etc]# cd /usr/local/php/etc/php-fpm.d</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# cp www.conf.default www.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# service php-fpm start</span><br><span class="line">Starting php-fpm  done</span><br><span class="line">[root@localhost php-fpm.d]#</span><br></pre></td></tr></table></figure>
+
+<p>7、添加 <code>nginx</code> 对 <code>fastcgi</code> 的支持，首先备份默认的配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# cp /etc/nginx/nginx.conf /etc/nginx/nginx.confbak</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# cp /etc/nginx/nginx.conf.default /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<p>编辑 /etc/nginx/nginx.conf ，在所支持的主页面格式中添加 php 格式的主页，类似如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# vim /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">           root   /usr/local/nginx/html;</span><br><span class="line">           index  index.php index.html index.htm;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>取消以下内容前面的注释：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">          root           /usr/local/nginx/html;</span><br><span class="line">          fastcgi_pass    127.0.0.1:9000;</span><br><span class="line">          fastcgi_index   index.php;</span><br><span class="line">          fastcgi_param  SCRIPT_FILENAME  /usr/local/nginx/html/$fastcgi_script_name;</span><br><span class="line">          include        fastcgi_params;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>重新载入nginx的配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost php-fpm.d]# service nginx reload</span><br></pre></td></tr></table></figure>
+
+<p>在 /usr/local/nginx/html/ 新建 index.php 的测试页面，内容如下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">phpinfo</span>();</span><br></pre></td></tr></table></figure>
+
+<p>浏览器访问测试，如看到以下内容则表示 <code>LNMP</code> 平台构建完成。</p>
+<p><img src="https://jekky-hexo-blog.oss-cn-beijing.aliyuncs.com/phpinfo.png" alt="phpinfo"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/02/11/fb40fa0b28ad/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Linux 编译安装 CURL</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="https://secure.gravatar.com/avatar/1234d320c6dc60dcb2337d7876bd8708?s=200" class="soft-size--round soft-style--box" alt="茄">
+    
+    
+      <h2>茄</h2>
+    
+    
+      <p>贵在坚持</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>3</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        0
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        7
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>flex-block主题部分重构，详情查看https://github.com/miiiku/flex-block</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/Linux/" style="font-size: 20px;" class="tags-cloud-10">Linux</a> <a href="/tags/MySQL/" style="font-size: 10px;" class="tags-cloud-0">MySQL</a> <a href="/tags/Nginx/" style="font-size: 10px;" class="tags-cloud-0">Nginx</a> <a href="/tags/PHP/" style="font-size: 10px;" class="tags-cloud-0">PHP</a> <a href="/tags/curl/" style="font-size: 10px;" class="tags-cloud-0">curl</a> <a href="/tags/%E5%85%B6%E4%BB%96/" style="font-size: 10px;" class="tags-cloud-0">其他</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" style="font-size: 20px;" class="tags-cloud-10">软件安装</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/jekkys" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">茄</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>
